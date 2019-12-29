@@ -10,6 +10,9 @@ const bootcamps = require("./routes/bootcamps");
 
 const app = express();
 
+// Body Parser
+app.use(express.json())
+
 // Connect to MognoDB
 mongoose.promise = global.Promise;
 mongoose.connect(process.env.MongoURI, {useNewUrlParser: true, useUnifiedTopology: true}, (err,db)=> {
@@ -20,7 +23,7 @@ mongoose.connect(process.env.MongoURI, {useNewUrlParser: true, useUnifiedTopolog
     console.log('Database Connected'.cyan.bold);
 });
 mongoose.set('useFindAndModify', false);
-
+mongoose.set('useCreateIndex', true);
 
 
 // Dev logging middleware
