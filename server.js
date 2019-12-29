@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const colors = require("colors");
+const errorHandler = require("./middleware/error");
 const mongoose = require("mongoose"); 
 
 require('dotenv').config()
@@ -32,9 +33,10 @@ if(process.env.NODE_ENV === 'development')
     app.use(morgan('dev'));
 }
 
-// Use Routes
+// Mount Routes
 app.use("/api/v1/bootcamps", bootcamps);
 
+app.use(errorHandler);
 
 // Listen to the PORt
 const PORT = process.env.PORT || 3000

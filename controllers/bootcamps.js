@@ -1,5 +1,5 @@
 const Bootcamp = require("../models/Bootcamp");
-
+const ErrorResposne = require("../utils/errorResponse");   
 
 // @desc    Get all Bootcamps
 // @route   GET /api/vi/bootcamps
@@ -11,7 +11,7 @@ exports.getBootcamps = async(req, res, next) => {
 
         res.status(200).json({success: true, count: bootcamps.length, data: bootcamps});
     } catch (err) {
-        res.status(400).json({success: false})
+        next(err);
       }
 }
 
@@ -25,14 +25,15 @@ exports.getBootcamp = async(req, res, next) => {
         
         if(!bootcamp)
         {
-            res.status(400).json({success: false});
+            // Id format is correct but the bootcamp is not there
+            return next(new ErrorResposne(`Bootcamp not found with id of ${req.params.id}`, 404));
         }
 
         res.status(200).json({success: true, data: bootcamp});
 
     } catch (err) {
-        res.status(400).json({success: false})
-
+        // Incorrectly formatted / invalid mongoDB object id
+        next(err);
     }
 }
 
@@ -51,7 +52,7 @@ exports.createBootcamp = async(req, res, next) => {
         })
 
     } catch (err) {
-        res.status(400).json({success: false})
+        next(err);
     }
 }
 
@@ -69,12 +70,12 @@ exports.updateBootcamp = async(req, res, next) => {
     
         if(!bootcamp)
         {
-            return res.status(400).json({success: false})
+            return next(new ErrorResposne(`Bootcamp not found with id of ${req.params.id}`, 404));
         }
     
         res.status(200).json({success: true, data: bootcamp});    
     } catch (err) {
-        res.status(400).json({success: false})
+        next(err);
     }
     
 }
@@ -89,13 +90,13 @@ exports.deleteBootcamp = async(req, res, next) => {
 
         if(!bootcamp)
         {
-            return res.status(400).json({success: false})
+            return next(new ErrorResposne(`Bootcamp not found with id of ${req.params.id}`, 404));
         }
 
         res.status(200).json({success: true, msg: "Deleted"});    
 
     } catch (err) {
-        res.status(400).json({success: false})   
+        next(err);
     }
 
 
