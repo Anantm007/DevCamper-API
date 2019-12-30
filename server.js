@@ -16,16 +16,13 @@ app.use(express.json())
 
 // Connect to MognoDB
 mongoose.promise = global.Promise;
-mongoose.connect(process.env.MongoURI, {useNewUrlParser: true, useUnifiedTopology: true}, (err,db)=> {
+mongoose.connect(process.env.MongoURI, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify:false, useCreateIndex:true}, (err,db)=> {
     if(err)
     console.log(err);
 
     else
     console.log('Database Connected'.cyan.bold.underline);
 });
-mongoose.set('useFindAndModify', false);
-mongoose.set('useCreateIndex', true);
-
 
 // Dev logging middleware
 if(process.env.NODE_ENV === 'development')
