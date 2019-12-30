@@ -21,7 +21,7 @@ mongoose.connect(process.env.MongoURI, {useNewUrlParser: true, useUnifiedTopolog
     console.log(err);
 
     else
-    console.log('Database Connected'.cyan.bold);
+    console.log('Database Connected'.cyan.bold.underline);
 });
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
@@ -41,5 +41,5 @@ app.use(errorHandler);
 // Listen to the PORt
 const PORT = process.env.PORT || 3000
 app.listen(PORT, () => {
-    console.log(`Server Running on port ${PORT}`.cyan.bold)
+    console.log(`Server Running on port ${PORT}`.cyan.bold.underline)
 })
