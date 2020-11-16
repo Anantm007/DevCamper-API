@@ -1,118 +1,115 @@
 const Course = require("../models/Course");
 const Bootcamp = require("../models/Bootcamp");
-const asyncHandler = require("../middleware/async")
-const ErrorResposne = require("../utils/errorResponse");   
+const asyncHandler = require("../middleware/async");
+const ErrorResposne = require("../utils/errorResponse");
 
 // @desc    Get all Cpurses
 // @route   GET /api/vi/courses
 // @route   GET /api/v1/bootcamps/:bootcampId/courses
 // @access  Public
-exports.getCourses = asyncHandler(async(req, res, next) => {
-    let query;
+exports.getCourses = asyncHandler(async (req, res, next) => {
+  let query;
 
-    if(req.params.bootcampId)
-    {
-        query = Course.find({bootcamp: req.params.bootcampId});
-    } else {
-        query = Course.find().populate({
-            path: 'bootcamp',
-            select: 'name description'
-        });
-    }
+  if (req.params.bootcampId) {
+    query = Course.find({ bootcamp: req.params.bootcampId });
+  } else {
+    query = Course.find().populate({
+      path: "bootcamp",
+      select: "name description",
+    });
+  }
 
-    const courses = await query;
+  const courses = await query;
 
-    res.status(200).json({
-        succcess: true,
-        count: courses.length,
-        data: courses
-    })
+  res.status(200).json({
+    succcess: true,
+    count: courses.length,
+    data: courses,
+  });
 });
 
-
-// @desc    Get single Course 
+// @desc    Get single Course
 // @route   GET /api/vi/courses/:id
 // @access  Public
-exports.getCourse = asyncHandler(async(req, res, next) => {
-    
-    const course = await Course.findById(req.params.id).populate({
-        path: 'bootcamp',
-        select: 'name description'
-    });
+exports.getCourse = asyncHandler(async (req, res, next) => {
+  const course = await Course.findById(req.params.id).populate({
+    path: "bootcamp",
+    select: "name description",
+  });
 
-    if(!course)
-    {
-        return next(new ErrorResposne(`No course with id of ${req.params.id}`, 404));
-    }
+  if (!course) {
+    return next(
+      new ErrorResposne(`No course with id of ${req.params.id}`, 404)
+    );
+  }
 
-    res.status(200).json({
-        succcess: true,
-        data: course
-    })
-})
+  res.status(200).json({
+    succcess: true,
+    data: course,
+  });
+});
 
-// @desc    Add a Course 
+// @desc    Add a Course
 // @route   POST /api/vi/bootcamps/:bootcampId/courses
 // @access  Private
-exports.addCourse = asyncHandler(async(req, res, next) => {
-    
-    req.body.bootcamp = req.params.bootcampId;
-    
-    
-    const bootcamp = await Bootcamp.findById(req.params.bootcampId);
+exports.addCourse = asyncHandler(async (req, res, next) => {
+  req.body.bootcamp = req.params.bootcampId;
 
-    if(!bootcamp)
-    {
-        return next(new ErrorResposne(`No bootcamp with id of ${req.params.bootcampId}`, 404));
-    }
+  const bootcamp = await Bootcamp.findById(req.params.bootcampId);
 
-    const course = await Course.create(req.body);
+  if (!bootcamp) {
+    return next(
+      new ErrorResposne(`No bootcamp with id of ${req.params.bootcampId}`, 404)
+    );
+  }
 
-    res.status(200).json({
-        succcess: true,
-        data: course
-    })
-})
+  const course = await Course.create(req.body);
 
-// @desc    Update a Course 
+  res.status(200).json({
+    succcess: true,
+    data: course,
+  });
+});
+
+// @desc    Update a Course
 // @route   PUT /api/vi/courses/:id
 // @access  Private
-exports.updateCourse = asyncHandler(async(req, res, next) => {
-        
-    let course = await Course.findById(req.params.id);
+exports.updateCourse = asyncHandler(async (req, res, next) => {
+  let course = await Course.findById(req.params.id);
 
-    if(!course)
-    {
-        return next(new ErrorResposne(`No course with id of ${req.params.id}`, 404));
-    }
+  if (!course) {
+    return next(
+      new ErrorResposne(`No course with id of ${req.params.id}`, 404)
+    );
+  }
 
-    course = await Course.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true
-    });
-     
-    res.status(200).json({
-        succcess: true,
-        data: course
-    })
-})
+  course = await Course.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
 
-// @desc    Delete a Course 
+  res.status(200).json({
+    succcess: true,
+    data: course,
+  });
+});
+
+// @desc    Delete a Course
 // @route   DELETE /api/vi/courses/:id
 // @access  Private
-exports.deleteCourse = asyncHandler(async(req, res, next) => {
-        
-    const course = await Course.findById(req.params.id);
+exports.deleteCourse = asyncHandler(async (req, res, next) => {
+  const course = await Course.findById(req.params.id);
 
-    if(!course)
-    {
-        return next(new ErrorResposne(`No course with id of ${req.params.id}`, 404));
-    }
+  if (!course) {
+    return next(
+      new ErrorResposne(`No course with id of ${req.params.id}`, 404)
+    );
+  }
 
-    await course.remove();
-     
-    res.status(200).json({
-        succcess: true,
-        data: {}
-    })
-})
+  await course.remove();
+
+  res.status(200).json({
+    succcess: true,
+    data: {},
+  });
+});
